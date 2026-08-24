@@ -1,6 +1,7 @@
 package dev.arsonist.vacanciesmonitoring.service.messagebuilder;
 
 import dev.arsonist.vacanciesmonitoring.dto.FastApiError;
+import dev.arsonist.vacanciesmonitoring.service.LogContext;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,6 +15,7 @@ public class ErrorMessageBuilder {
                     <b>Snapshot ID:</b> %s
                     <b>Parser Version:</b> %s
                     <b>Timestamp:</b> %s
+                    <b>Log ID:</b> %s
 
                     <b>Message:</b>
                     <blockquote expandable><code>%s</code></blockquote>
@@ -23,7 +25,8 @@ public class ErrorMessageBuilder {
                         escape(error.snapshotId()),
                         escape(error.parserVersion()),
                         escape(error.timestamp()),
-                        escape(error.message())
+                        escape(error.message()),
+                        LogContext.getLogId()
                 );
     }
 

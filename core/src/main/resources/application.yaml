@@ -14,6 +14,7 @@ app:
     snapshots:
         lifetime-in-days: ${SNAPSHOTS_LIFETIME_IN_DAYS}
         fetch-delay-in-seconds: ${SNAPSHOTS_FETCH_DELAY_IN_SECONDS}
+        sleep-up-to-before-fetch-in-milliseconds: ${SNAPSHOTS_SLEEP_UP_TO_BEFORE_FETCH_IN_MILLISECONDS}
 
     telegram:
         bot-token: ${TELEGRAM_BOT_TOKEN}

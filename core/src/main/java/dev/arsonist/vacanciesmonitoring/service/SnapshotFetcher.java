@@ -9,8 +9,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 import java.io.ByteArrayOutputStream;
-import java.time.Duration;
-import java.util.Random;
 import java.util.zip.GZIPOutputStream;
 
 @Slf4j
@@ -18,20 +16,7 @@ import java.util.zip.GZIPOutputStream;
 @RequiredArgsConstructor
 public class SnapshotFetcher {
 
-    private final Random random;
-
     public byte[] fetchSnapshot(JobBoard jobBoard) {
-        long waitTimeInMillis = random.nextLong(0, 60000);
-        try {
-            log.info("[ID: {}] - Waiting for {} seconds for randomization of request time",
-                    LogContext.getLogId(), Duration.ofMillis(waitTimeInMillis).toSeconds());
-            Thread.sleep(waitTimeInMillis);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            log.error("[ID: {}] - Exception during waiting", LogContext.getLogId(), e);
-            throw new RuntimeException(e);
-        }
-
         log.info("[ID: {}] - Fetching new snapshot", LogContext.getLogId());
         byte[] html = RestClient.builder()
                 .build()

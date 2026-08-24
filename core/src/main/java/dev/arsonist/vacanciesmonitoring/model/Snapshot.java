@@ -21,4 +21,5 @@ public class Snapshot {
     private byte[] gzippedHtml;
     private String parserVersion;
     private ParsingStatus parsingStatus;
+    private String logId;
 }
