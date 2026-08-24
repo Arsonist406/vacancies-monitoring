@@ -63,7 +63,7 @@ public class MainFlowExecutor{
             var filteredVacancies = Arrays.stream(vacancies)
                     .filter(v -> {
                         Boolean exists = vacancyRepository.existsByKeys(v.companyName(), jobBoard, v.location(), v.title());
-                        return exists != null && exists;
+                        return exists == null || !exists;
                     }).toArray(VacancyDto[]::new);
             if (filteredVacancies.length == 0) {
                 log.info("[ID: {}] - No new vacancies. Ending main flow execution", LogContext.getLogId());
