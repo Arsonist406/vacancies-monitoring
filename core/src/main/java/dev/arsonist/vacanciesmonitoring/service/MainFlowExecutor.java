@@ -57,6 +57,7 @@ public class MainFlowExecutor {
                 .fetchTime(LocalDateTime.now())
                 .gzippedHtml(gzippedHtml)
                 .logId(LogContext.getLogId())
+                .test(jobBoard.isTest())
                 .build();
         snapshotRepository.save(snapshot);
 

@@ -18,11 +18,18 @@ public class CleanupSnapshotsTask {
     private final SnapshotProperties snapshotProperties;
     private final SnapshotRepository snapshotRepository;
 
-    @Scheduled(fixedRate = 3, timeUnit = TimeUnit.HOURS)
+    @Scheduled(fixedRate = 1, timeUnit = TimeUnit.HOURS)
     public void cleanup() {
         log.info("Starting cleanup task");
+
         LocalDateTime cutoff = LocalDateTime.now().minusDays(snapshotProperties.lifetimeInDays());
-        snapshotRepository.deleteOldSnapshots(cutoff);
-        log.info("Ending cleanup task. Deleted snapshots fetched before {}", cutoff);
+        snapshotRepository.deleteOldSnapshots(false, cutoff);
+        log.info("Deleted snapshots fetched before {}", cutoff);
+
+        LocalDateTime testCutoff = LocalDateTime.now().minusDays(snapshotProperties.testLifetimeInDays());
+        snapshotRepository.deleteOldSnapshots(true, testCutoff);
+        log.info("Deleted test snapshots fetched before {}", testCutoff);
+
+        log.info("Ending cleanup task");
     }
 }

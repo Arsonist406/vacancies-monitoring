@@ -22,4 +22,5 @@ public class Snapshot {
     private String parserVersion;
     private ParsingStatus parsingStatus;
     private String logId;
+    private boolean test;
 }
