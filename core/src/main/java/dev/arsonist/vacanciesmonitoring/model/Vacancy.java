@@ -7,8 +7,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @Builder
@@ -26,6 +24,6 @@ public class Vacancy {
     private String location;
     private String title;
 
-    private LocalDateTime publishTime;
+    private String publishTime;
     private String url;
 }

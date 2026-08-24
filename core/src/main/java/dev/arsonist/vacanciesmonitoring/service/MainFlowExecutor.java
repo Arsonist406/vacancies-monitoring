@@ -19,8 +19,6 @@ import org.springframework.web.client.RestClient;
 import tools.jackson.databind.ObjectMapper;
 
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -28,8 +26,6 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 public class MainFlowExecutor{
-
-    private static final ZoneId KYIV_ZONE_ID = ZoneId.of("Europe/Kyiv");
 
     private final SnapshotFetcher snapshotFetcher;
     private final ParserProperties parserProperties;
@@ -61,10 +57,9 @@ public class MainFlowExecutor{
         } else {
             var vacancies = objectMapper.readValue(parseResponse.getBody(), VacancyDto[].class);
             var filteredVacancies = Arrays.stream(vacancies)
-                    .filter(v -> {
-                        Boolean exists = vacancyRepository.existsByKeys(v.companyName(), jobBoard, v.location(), v.title());
-                        return exists == null || !exists;
-                    }).toArray(VacancyDto[]::new);
+                    .filter(v -> vacancyRepository.existsByKeys(v.companyName(), jobBoard, v.location(), v.title())
+                            .isEmpty())
+                    .toArray(VacancyDto[]::new);
             if (filteredVacancies.length == 0) {
                 log.info("[ID: {}] - No new vacancies. Ending main flow execution", LogContext.getLogId());
                 return;
@@ -97,16 +92,12 @@ public class MainFlowExecutor{
     }
 
     private Vacancy mapToVacancy(VacancyDto vacancyDto) {
-        var publishTime = OffsetDateTime.parse(vacancyDto.publishTime())
-                .atZoneSameInstant(KYIV_ZONE_ID)
-                .toLocalDateTime();
-
         return Vacancy.builder()
                 .companyName(vacancyDto.companyName())
                 .jobBoard(vacancyDto.jobBoard())
                 .location(vacancyDto.location())
                 .title(vacancyDto.title())
-                .publishTime(publishTime)
+                .publishTime(vacancyDto.publishTime())
                 .url(vacancyDto.url())
                 .build();
     }

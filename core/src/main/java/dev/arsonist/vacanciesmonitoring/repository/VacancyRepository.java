@@ -5,8 +5,10 @@ import dev.arsonist.vacanciesmonitoring.model.Vacancy;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
+import java.util.List;
+
 public interface VacancyRepository extends MongoRepository<Vacancy, String> {
 
     @Query("{ 'companyName': ?0, 'jobBoard': ?1, 'location': ?2, 'title': ?3 }")
-    Boolean existsByKeys(String companyName, JobBoard jobBoard, String location, String title);
+    List<Vacancy> existsByKeys(String companyName, JobBoard jobBoard, String location, String title);
 }
