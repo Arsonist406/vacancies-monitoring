@@ -8,5 +8,5 @@ import org.springframework.data.mongodb.repository.Query;
 public interface VacancyRepository extends MongoRepository<Vacancy, String> {
 
     @Query("{ 'companyName': ?0, 'jobBoard': ?1, 'location': ?2, 'title': ?3 }")
-    boolean existsByKeys(String companyName, JobBoard jobBoard, String location, String title);
+    Boolean existsByKeys(String companyName, JobBoard jobBoard, String location, String title);
 }

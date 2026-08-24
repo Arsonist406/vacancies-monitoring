@@ -2,6 +2,7 @@ FROM eclipse-temurin:21-jdk AS build
 WORKDIR /workspace
 COPY .mvn/ .mvn/
 COPY mvnw pom.xml ./
+COPY core/pom.xml core/pom.xml
 RUN --mount=type=cache,target=/root/.m2 \
     ./mvnw -q -B dependency:go-offline
 

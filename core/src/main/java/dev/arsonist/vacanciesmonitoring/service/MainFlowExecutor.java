@@ -61,8 +61,10 @@ public class MainFlowExecutor{
         } else {
             var vacancies = objectMapper.readValue(parseResponse.getBody(), VacancyDto[].class);
             var filteredVacancies = Arrays.stream(vacancies)
-                    .filter(v -> !vacancyRepository.existsByKeys(v.companyName(), jobBoard, v.location(), v.title()))
-                    .toArray(VacancyDto[]::new);
+                    .filter(v -> {
+                        Boolean exists = vacancyRepository.existsByKeys(v.companyName(), jobBoard, v.location(), v.title());
+                        return exists != null && exists;
+                    }).toArray(VacancyDto[]::new);
             if (filteredVacancies.length == 0) {
                 log.info("[ID: {}] - No new vacancies. Ending main flow execution", LogContext.getLogId());
                 return;

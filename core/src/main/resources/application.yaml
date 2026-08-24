@@ -1,22 +1,23 @@
 spring:
     application:
         name: core
+
     mongodb:
-        host: ${MONGO_HOST:mongodb}
-        port: ${MONGO_PORT:27017}
-        username: ${MONGO_INITDB_ROOT_USERNAME:root}
-        password: ${MONGO_INITDB_ROOT_PASSWORD:root}
-        database: ${MONGO_INITDB_DATABASE:vacancies-monitoring}
-        authentication-database: admin
+        host: ${MONGO_HOST}
+        port: ${MONGO_PORT}
+        username: ${MONGO_APP_USERNAME}
+        password: ${MONGO_APP_PASSWORD}
+        database: ${MONGO_INITDB_DATABASE}
+        authentication-database: ${MONGO_INITDB_DATABASE}
 
 app:
     snapshots:
-        lifetime-in-days: ${SNAPSHOTS_LIFETIME_IN_DAYS:7}
-        fetch-delay-in-seconds: ${SNAPSHOTS_FETCH_DELAY_IN_SECONDS:60}
+        lifetime-in-days: ${SNAPSHOTS_LIFETIME_IN_DAYS}
+        fetch-delay-in-seconds: ${SNAPSHOTS_FETCH_DELAY_IN_SECONDS}
 
     telegram:
-        bot-token: ${TELEGRAM_BOT_TOKEN:1234}
-        chat-id: ${TELEGRAM_CHAT_ID:-1001234}
+        bot-token: ${TELEGRAM_BOT_TOKEN}
+        chat-id: ${TELEGRAM_CHAT_ID}
 
     parser:
         url: ${PARSER_URL}

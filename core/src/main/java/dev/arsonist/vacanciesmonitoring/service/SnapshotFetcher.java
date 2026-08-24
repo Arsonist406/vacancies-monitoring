@@ -25,8 +25,9 @@ public class SnapshotFetcher {
         try {
             log.info("[ID: {}] - Waiting for {} seconds for randomization of request time",
                     LogContext.getLogId(), Duration.ofMillis(waitTimeInMillis).toSeconds());
-            Thread.currentThread().wait(waitTimeInMillis);
+            Thread.sleep(waitTimeInMillis);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             log.error("[ID: {}] - Exception during waiting", LogContext.getLogId(), e);
             throw new RuntimeException(e);
         }
