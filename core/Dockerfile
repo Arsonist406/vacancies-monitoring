@@ -2,8 +2,12 @@ FROM eclipse-temurin:21-jdk AS build
 WORKDIR /workspace
 COPY .mvn/ .mvn/
 COPY mvnw pom.xml ./
+RUN --mount=type=cache,target=/root/.m2 \
+    ./mvnw -q -B dependency:go-offline
+
 COPY core/ core/
-RUN ./mvnw -q -B -pl core -am clean package -DskipTests
+RUN --mount=type=cache,target=/root/.m2 \
+    ./mvnw -q -B -pl core -am clean package -DskipTests -o
 
 FROM eclipse-temurin:21-jre
 RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
