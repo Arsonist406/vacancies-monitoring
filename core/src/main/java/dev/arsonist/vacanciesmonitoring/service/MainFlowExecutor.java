@@ -10,7 +10,7 @@ import dev.arsonist.vacanciesmonitoring.model.Vacancy;
 import dev.arsonist.vacanciesmonitoring.repository.SnapshotRepository;
 import dev.arsonist.vacanciesmonitoring.repository.VacancyRepository;
 import dev.arsonist.vacanciesmonitoring.service.messagebuilder.DeadParserMessageBuilder;
-import dev.arsonist.vacanciesmonitoring.service.messagebuilder.ErrorMessageBuilder;
+import dev.arsonist.vacanciesmonitoring.service.messagebuilder.FastApiErrorMessageBuilder;
 import dev.arsonist.vacanciesmonitoring.service.messagebuilder.NewVacancyMessageBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +41,7 @@ public class MainFlowExecutor {
     private final TelegramNotifier telegramNotifier;
     private final VacancyRepository vacancyRepository;
 
-    private final ErrorMessageBuilder errorMessageBuilder;
+    private final FastApiErrorMessageBuilder fastApiErrorMessageBuilder;
     private final NewVacancyMessageBuilder newVacancyMessageBuilder;
     private final DeadParserMessageBuilder deadParserMessageBuilder;
 
@@ -88,7 +88,7 @@ public class MainFlowExecutor {
         ResponseEntity<String> parseResponse = sendParseRequest(snapshotId);
         if (!parseResponse.getStatusCode().is2xxSuccessful()) {
             var error = objectMapper.readValue(parseResponse.getBody(), FastApiError.class);
-            return errorMessageBuilder.build(error);
+            return fastApiErrorMessageBuilder.build(error);
 
         } else {
             var vacancies = objectMapper.readValue(parseResponse.getBody(), VacancyDto[].class);

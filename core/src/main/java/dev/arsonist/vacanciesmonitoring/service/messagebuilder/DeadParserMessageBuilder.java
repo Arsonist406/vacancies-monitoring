@@ -5,11 +5,12 @@ import dev.arsonist.vacanciesmonitoring.service.LogContext;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DeadParserMessageBuilder {
+public class DeadParserMessageBuilder implements MessageBuilder<Snapshot> {
 
+    @Override
     public String build(Snapshot snapshot) {
         return """
-                    <b>💀💀💀PROBABLY DEAD PARSER💀💀💀</b>
+                    <b>💀DEAD PARSER💀</b>
 
                     <b>Snapshot ID:</b> %s
                     <b>Job Board:</b> %s
@@ -24,14 +25,5 @@ public class DeadParserMessageBuilder {
                         escape(snapshot.getFetchTime().toString()),
                         escape(LogContext.getLogId())
                 );
-    }
-
-    private String escape(String s) {
-        if (s == null) {
-            return "";
-        }
-        return s.replace("&", "&amp;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;");
     }
 }

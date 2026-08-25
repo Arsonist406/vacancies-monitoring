@@ -1,16 +1,15 @@
 package dev.arsonist.vacanciesmonitoring.service.messagebuilder;
 
 import dev.arsonist.vacanciesmonitoring.dto.VacancyDto;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
 @Component
-@RequiredArgsConstructor
-public class NewVacancyMessageBuilder {
+public class NewVacancyMessageBuilder implements MessageBuilder<VacancyDto[]> {
 
+    @Override
     public String build(VacancyDto[] vacancies) {
         String body = Arrays.stream(vacancies)
                 .map(this::formatVacancy)
@@ -33,14 +32,5 @@ public class NewVacancyMessageBuilder {
                         escape(vacancyDto.publishTime()),
                         vacancyDto.url()
                 );
-    }
-
-    private String escape(String s) {
-        if (s == null) {
-            return "";
-        }
-        return s.replace("&", "&amp;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;");
     }
 }
