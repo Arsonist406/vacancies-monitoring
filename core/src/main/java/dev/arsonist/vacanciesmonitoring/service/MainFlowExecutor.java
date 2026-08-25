@@ -3,8 +3,8 @@ package dev.arsonist.vacanciesmonitoring.service;
 import dev.arsonist.vacanciesmonitoring.config.ParserProperties;
 import dev.arsonist.vacanciesmonitoring.config.SnapshotProperties;
 import dev.arsonist.vacanciesmonitoring.dto.FastApiError;
+import dev.arsonist.vacanciesmonitoring.dto.JobBoardConfig;
 import dev.arsonist.vacanciesmonitoring.dto.VacancyDto;
-import dev.arsonist.vacanciesmonitoring.model.JobBoard;
 import dev.arsonist.vacanciesmonitoring.model.Snapshot;
 import dev.arsonist.vacanciesmonitoring.model.Vacancy;
 import dev.arsonist.vacanciesmonitoring.repository.SnapshotRepository;
@@ -45,23 +45,23 @@ public class MainFlowExecutor {
     private final NewVacancyMessageBuilder newVacancyMessageBuilder;
     private final DeadParserMessageBuilder deadParserMessageBuilder;
 
-    public void execute(JobBoard jobBoard) {
+    public void execute(JobBoardConfig jobBoardConfig) {
         log.info("[ID: {}] - Starting main flow execution", LogContext.getLogId());
 
         sleep();
         String snapshotId = UUID.randomUUID().toString();
-        byte[] gzippedHtml = snapshotFetcher.fetchSnapshot(jobBoard);
+        byte[] gzippedHtml = snapshotFetcher.fetchSnapshot(jobBoardConfig);
         var snapshot = Snapshot.builder()
                 .id(snapshotId)
-                .jobBoard(jobBoard)
+                .jobBoard(jobBoardConfig.jobBoard())
                 .fetchTime(LocalDateTime.now())
                 .gzippedHtml(gzippedHtml)
                 .logId(LogContext.getLogId())
-                .test(jobBoard.isTest())
+                .test(jobBoardConfig.test())
                 .build();
         snapshotRepository.save(snapshot);
 
-        String message = buildMessage(snapshotId, jobBoard);
+        String message = buildMessage(snapshotId, jobBoardConfig);
         if (StringUtils.hasText(message)) {
             log.info("[ID: {}] - Sending message to telegram", LogContext.getLogId());
             telegramNotifier.notify(message);
@@ -84,7 +84,7 @@ public class MainFlowExecutor {
     }
 
     private String buildMessage(String snapshotId,
-                                JobBoard jobBoard) {
+                                JobBoardConfig jobBoardConfig) {
         ResponseEntity<String> parseResponse = sendParseRequest(snapshotId);
         if (!parseResponse.getStatusCode().is2xxSuccessful()) {
             var error = objectMapper.readValue(parseResponse.getBody(), FastApiError.class);
@@ -92,7 +92,7 @@ public class MainFlowExecutor {
 
         } else {
             var vacancies = objectMapper.readValue(parseResponse.getBody(), VacancyDto[].class);
-            if (jobBoard.isTest()) {
+            if (jobBoardConfig.test()) {
                 if (vacancies.length != 0) {
                     log.info("[ID: {}] - Parser is working", LogContext.getLogId());
                     return null;
@@ -103,7 +103,7 @@ public class MainFlowExecutor {
                 return deadParserMessageBuilder.build(updatedSnapshot);
             } else {
                 var filteredVacancies = Arrays.stream(vacancies)
-                        .filter(v -> vacancyRepository.existsByKeys(v.companyName(), jobBoard, v.location(), v.title())
+                        .filter(v -> vacancyRepository.existsByKeys(v.companyName(), jobBoardConfig.jobBoard(), v.location(), v.title())
                                 .isEmpty())
                         .toArray(VacancyDto[]::new);
                 if (filteredVacancies.length == 0) {

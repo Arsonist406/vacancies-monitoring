@@ -1,6 +1,6 @@
 package dev.arsonist.vacanciesmonitoring.service;
 
-import dev.arsonist.vacanciesmonitoring.model.JobBoard;
+import dev.arsonist.vacanciesmonitoring.dto.JobBoardConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -16,12 +16,12 @@ import java.util.zip.GZIPOutputStream;
 @RequiredArgsConstructor
 public class SnapshotFetcher {
 
-    public byte[] fetchSnapshot(JobBoard jobBoard) {
+    public byte[] fetchSnapshot(JobBoardConfig jobBoardConfig) {
         log.info("[ID: {}] - Fetching new snapshot", LogContext.getLogId());
         byte[] html = RestClient.builder()
                 .build()
                 .get()
-                .uri(jobBoard.getUrl())
+                .uri(jobBoardConfig.url())
                 .header(HttpHeaders.ACCEPT_LANGUAGE, "uk;q=0.6")
                 .header(HttpHeaders.ACCEPT, MediaType.TEXT_HTML_VALUE)
                 .retrieve()

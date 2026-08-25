@@ -1,7 +1,8 @@
-package dev.arsonist.vacanciesmonitoring.job;
+package dev.arsonist.vacanciesmonitoring.task;
 
 import dev.arsonist.vacanciesmonitoring.config.SnapshotProperties;
 import dev.arsonist.vacanciesmonitoring.model.JobBoard;
+import dev.arsonist.vacanciesmonitoring.service.JobBoardConfigFactory;
 import dev.arsonist.vacanciesmonitoring.service.LogContext;
 import dev.arsonist.vacanciesmonitoring.service.MainFlowExecutor;
 import jakarta.annotation.PostConstruct;
@@ -23,6 +24,7 @@ public class SnapshotsFetchTaskFactory {
     private final SnapshotProperties snapshotProperties;
     private final TaskScheduler taskScheduler;
     private final MainFlowExecutor mainFlowExecutor;
+    private final JobBoardConfigFactory jobBoardConfigFactory;
 
     @PostConstruct
     public void init() {
@@ -34,11 +36,12 @@ public class SnapshotsFetchTaskFactory {
             trigger.setInitialDelay(initialDelay);
             trigger.setFixedRate(false);
 
+            var jobBoardConfig = jobBoardConfigFactory.create(jobBoard);
             taskScheduler.schedule(() -> {
                 try {
                     LogContext.withLogId(
                             jobBoard + ":" + UUID.randomUUID(),
-                            () -> mainFlowExecutor.execute(jobBoard)
+                            () -> mainFlowExecutor.execute(jobBoardConfig)
                     );
                 } catch (Exception e) {
                     throw new RuntimeException(e);

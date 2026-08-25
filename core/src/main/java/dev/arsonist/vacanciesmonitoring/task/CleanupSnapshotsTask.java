@@ -1,4 +1,4 @@
-package dev.arsonist.vacanciesmonitoring.job;
+package dev.arsonist.vacanciesmonitoring.task;
 
 import dev.arsonist.vacanciesmonitoring.config.SnapshotProperties;
 import dev.arsonist.vacanciesmonitoring.repository.SnapshotRepository;
