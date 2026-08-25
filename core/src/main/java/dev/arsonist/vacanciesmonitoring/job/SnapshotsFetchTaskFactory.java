@@ -26,12 +26,11 @@ public class SnapshotsFetchTaskFactory {
 
     @PostConstruct
     public void init() {
-        long jobBoardsCount = Arrays.stream(JobBoard.values()).count();
-        long delayBetweenFetchFromDifferentBoards = snapshotProperties.fetchDelayInSeconds() / jobBoardsCount;
+        Arrays.stream(JobBoard.values()).forEach(jobBoard -> {
+            var periodicDelay = Duration.ofSeconds(snapshotProperties.fetchDelayInSeconds());
+            var trigger = new PeriodicTrigger(periodicDelay);
 
-        for (JobBoard jobBoard : JobBoard.values()) {
-            var trigger = new PeriodicTrigger(Duration.ofSeconds(snapshotProperties.fetchDelayInSeconds()));
-            var initialDelay = Duration.ofSeconds((jobBoard.ordinal() * delayBetweenFetchFromDifferentBoards) + 60);
+            var initialDelay = Duration.ofSeconds(20);
             trigger.setInitialDelay(initialDelay);
             trigger.setFixedRate(false);
 
@@ -45,7 +44,7 @@ public class SnapshotsFetchTaskFactory {
                     throw new RuntimeException(e);
                 }
             }, trigger);
-            log.info("Schedule periodic task for job board {}", jobBoard);
-        }
+            log.info("Schedule periodic task for {}", jobBoard);
+        });
     }
 }
