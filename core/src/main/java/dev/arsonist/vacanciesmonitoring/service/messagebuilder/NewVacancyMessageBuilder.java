@@ -1,36 +1,39 @@
 package dev.arsonist.vacanciesmonitoring.service.messagebuilder;
 
-import dev.arsonist.vacanciesmonitoring.dto.VacancyDto;
+import dev.arsonist.vacanciesmonitoring.model.Vacancy;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class NewVacancyMessageBuilder implements MessageBuilder<VacancyDto[]> {
+public class NewVacancyMessageBuilder implements MessageBuilder<List<Vacancy>> {
 
     @Override
-    public String build(VacancyDto[] vacancies) {
-        String body = Arrays.stream(vacancies)
+    public String build(List<Vacancy> vacancies) {
+        String body = vacancies.stream()
                 .map(this::formatVacancy)
                 .collect(Collectors.joining("\n\n"));
 
         return "<b>🫪🔥New Vacancy🔥🫪</b>\n\n" + body;
     }
 
-    private String formatVacancy(VacancyDto vacancyDto) {
+    private String formatVacancy(Vacancy vacancy) {
         return """
+                <b>Board:</b> %s
                 <b>Title:</b> %s
                 <b>Company:</b> %s
                 <b>Location:</b> %s
                 <b>Published:</b> %s
-                <b>URL:</b> <a href="%s">Link</a>"""
+                -> <a href="%s">Link</a> <-
+                """
                 .formatted(
-                        escape(vacancyDto.title()),
-                        escape(vacancyDto.companyName()),
-                        escape(vacancyDto.location()),
-                        escape(vacancyDto.publishTime()),
-                        vacancyDto.url()
+                        escape(vacancy.getJobBoard().name()),
+                        escape(vacancy.getTitle()),
+                        escape(vacancy.getCompanyName()),
+                        escape(vacancy.getLocation()),
+                        escape(vacancy.getPublishTime()),
+                        vacancy.getUrl()
                 );
     }
 }

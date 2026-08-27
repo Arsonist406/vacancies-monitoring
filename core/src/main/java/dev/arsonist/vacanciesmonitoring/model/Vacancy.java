@@ -19,8 +19,8 @@ public class Vacancy {
     @Id
     private String id;
 
-    private String companyName;
     private JobBoard jobBoard;
+    private String companyName;
     private String location;
     private String title;
 

@@ -105,16 +105,17 @@ public class MainFlowExecutor {
                 var filteredVacancies = Arrays.stream(vacancies)
                         .filter(v -> vacancyRepository.existsByKeys(v.companyName(), jobBoardConfig.jobBoard(), v.location(), v.title())
                                 .isEmpty())
-                        .toArray(VacancyDto[]::new);
-                if (filteredVacancies.length == 0) {
+                        .toList();
+                if (filteredVacancies.isEmpty()) {
                     log.info("[ID: {}] - No new vacancies", LogContext.getLogId());
                     return null;
                 }
 
-                Arrays.stream(filteredVacancies)
+                var savedVacancies = filteredVacancies.stream()
                         .map(this::mapToVacancy)
-                        .forEach(vacancyRepository::save);
-                return newVacancyMessageBuilder.build(vacancies);
+                        .map(vacancyRepository::save)
+                        .toList();
+                return newVacancyMessageBuilder.build(savedVacancies);
             }
         }
     }
