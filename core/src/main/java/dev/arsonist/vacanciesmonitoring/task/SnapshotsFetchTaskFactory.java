@@ -5,8 +5,6 @@ import dev.arsonist.vacanciesmonitoring.model.JobBoard;
 import dev.arsonist.vacanciesmonitoring.service.JobBoardConfigFactory;
 import dev.arsonist.vacanciesmonitoring.service.LogContext;
 import dev.arsonist.vacanciesmonitoring.service.MainFlowExecutor;
-import dev.arsonist.vacanciesmonitoring.service.TelegramNotifier;
-import dev.arsonist.vacanciesmonitoring.service.messagebuilder.CoreErrorMessageBuilder;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,10 +23,8 @@ public class SnapshotsFetchTaskFactory {
 
     private final SnapshotProperties snapshotProperties;
     private final TaskScheduler taskScheduler;
-    private final MainFlowExecutor mainFlowExecutor;
     private final JobBoardConfigFactory jobBoardConfigFactory;
-    private final TelegramNotifier telegramNotifier;
-    private final CoreErrorMessageBuilder coreErrorMessageBuilder;
+    private final MainFlowExecutor mainFlowExecutor;
 
     @PostConstruct
     public void init() {
@@ -42,40 +38,11 @@ public class SnapshotsFetchTaskFactory {
 
             var jobBoardConfig = jobBoardConfigFactory.create(jobBoard);
             taskScheduler.schedule(() -> {
-                String logId = jobBoard + ":" + UUID.randomUUID();
-                Runnable runnable = () -> {
-                    try {
-                        mainFlowExecutor.execute(jobBoardConfig);
-                    } catch (Exception exception) {
-                        tryToNotify(exception);
-                        throw new RuntimeException(exception);
-                    }
-                };
+                String logId = jobBoardConfig.jobBoard() + ":" + UUID.randomUUID();
+                Runnable runnable = () -> mainFlowExecutor.execute(jobBoardConfig);
                 LogContext.withLogId(logId, runnable);
             }, trigger);
             log.info("Schedule periodic task for {}", jobBoard);
         });
-    }
-
-    private void tryToNotify(Exception exception) {
-        String message = coreErrorMessageBuilder.build(exception);
-
-        boolean userNotified = false;
-        for (int i = 1; i < 31 && !userNotified; i++) {
-            try {
-                log.info("[ID: {}] - Try to notify user. Attempt: {}", LogContext.getLogId(), i);
-                telegramNotifier.notify(message);
-                userNotified = true;
-            } catch (Exception notificationException) {
-                // probably, lost internet connection or telegram servers are dead
-                try {
-                    Thread.sleep(20000);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    log.error("[ID: {}] - Exception during sleeping", LogContext.getLogId(), e);
-                    throw new RuntimeException(e);
-                }
-            }
-        }
     }
 }

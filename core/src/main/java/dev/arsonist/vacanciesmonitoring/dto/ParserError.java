@@ -1,6 +1,6 @@
 package dev.arsonist.vacanciesmonitoring.dto;
 
-public record FastApiError(
+public record ParserError(
         Integer code,
         String snapshotId,
         String message,

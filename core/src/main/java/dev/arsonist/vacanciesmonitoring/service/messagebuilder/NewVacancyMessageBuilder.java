@@ -25,7 +25,7 @@ public class NewVacancyMessageBuilder implements MessageBuilder<List<Vacancy>> {
                 <b>Company:</b> %s
                 <b>Location:</b> %s
                 <b>Published:</b> %s
-                -> <a href="%s">Link</a> <-
+                <a href="%s">Link</a>
                 """
                 .formatted(
                         escape(vacancy.getJobBoard().name()),
