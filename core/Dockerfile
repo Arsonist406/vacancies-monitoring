@@ -4,7 +4,7 @@ COPY .mvn/ .mvn/
 COPY mvnw pom.xml ./
 COPY core/pom.xml core/pom.xml
 RUN --mount=type=cache,target=/root/.m2 \
-    ./mvnw -q -B dependency:go-offline
+    ./mvnw -q -B -pl core -am dependency:go-offline
 
 COPY core/ core/
 RUN --mount=type=cache,target=/root/.m2 \
