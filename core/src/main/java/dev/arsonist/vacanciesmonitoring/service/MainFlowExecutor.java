@@ -49,8 +49,11 @@ public class MainFlowExecutor {
         log.info("[ID: {}] - Starting main flow execution", LogContext.getLogId());
 
         sleep();
-        String snapshotId = UUID.randomUUID().toString();
+
+        log.info("[ID: {}] - Fetching snapshot", LogContext.getLogId());
         byte[] gzippedHtml = snapshotFetcher.fetchSnapshot(jobBoardConfig);
+
+        String snapshotId = UUID.randomUUID().toString();
         var snapshot = Snapshot.builder()
                 .id(snapshotId)
                 .jobBoard(jobBoardConfig.jobBoard())
@@ -61,7 +64,10 @@ public class MainFlowExecutor {
                 .build();
         snapshotRepository.save(snapshot);
 
-        String message = buildMessage(snapshotId, jobBoardConfig);
+        log.info("[ID: {}] - Sending parse request", LogContext.getLogId());
+        ResponseEntity<String> parseResponse = sendParseRequest(snapshotId);
+
+        String message = buildMessage(parseResponse, snapshotId, jobBoardConfig);
         if (StringUtils.hasText(message)) {
             log.info("[ID: {}] - Sending message to telegram", LogContext.getLogId());
             telegramNotifier.notify(message);
@@ -83,9 +89,9 @@ public class MainFlowExecutor {
         }
     }
 
-    private String buildMessage(String snapshotId,
+    private String buildMessage(ResponseEntity<String> parseResponse,
+                                String snapshotId,
                                 JobBoardConfig jobBoardConfig) {
-        ResponseEntity<String> parseResponse = sendParseRequest(snapshotId);
         if (!parseResponse.getStatusCode().is2xxSuccessful()) {
             var error = objectMapper.readValue(parseResponse.getBody(), FastApiError.class);
             return fastApiErrorMessageBuilder.build(error);
