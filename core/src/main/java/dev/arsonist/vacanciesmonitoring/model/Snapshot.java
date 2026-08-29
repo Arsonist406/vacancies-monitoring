@@ -18,7 +18,7 @@ public class Snapshot {
     private String id;
     private JobBoard jobBoard;
     private LocalDateTime fetchTime;
-    private byte[] gzippedHtml;
+    private byte[] html;
     private String parserVersion;
     private ParsingStatus parsingStatus;
     private String logId;

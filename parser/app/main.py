@@ -1,4 +1,3 @@
-import gzip
 import logging
 from app.db import database
 from app.models import FastApiError
@@ -60,12 +59,12 @@ async def parse_snapshot(snapshot_id: str):
     logger.info("[%s] jobBoard=%s -> parser=%s", snapshot_id, job_board, parser_version)
 
     try:
-        html = gzip.decompress(bytes(doc["gzippedHtml"])).decode("utf-8")
-        logger.info("[%s] decompressed html: %d chars", snapshot_id, len(html))
+        html = bytes(doc["html"]).decode("utf-8")
+        logger.info("[%s] decoded html: %d chars", snapshot_id, len(html))
     except Exception as e:
-        logger.exception("[%s] failed to gunzip/decode stored html", snapshot_id)
+        logger.exception("[%s] failed to decode stored html", snapshot_id)
         await set_parsing_result(snapshot_id, parser_version, "ERROR")
-        return error_response(500, snapshot_id, f"Failed to decompress stored HTML: {e}", parser_version)
+        return error_response(500, snapshot_id, f"Failed to decode stored HTML: {e}", parser_version)
 
     try:
         vacancies = parse_fn(html, job_board)

@@ -50,15 +50,15 @@ public class MainFlowExecutor {
 
         sleep();
 
-        log.info("[ID: {}] - Fetching snapshot", LogContext.getLogId());
-        byte[] gzippedHtml = snapshotFetcher.fetchSnapshot(jobBoardConfig);
+        log.info("[ID: {}] - Fetching new snapshot", LogContext.getLogId());
+        byte[] html = snapshotFetcher.fetchSnapshot(jobBoardConfig);
 
         String snapshotId = UUID.randomUUID().toString();
         var snapshot = Snapshot.builder()
                 .id(snapshotId)
                 .jobBoard(jobBoardConfig.jobBoard())
                 .fetchTime(LocalDateTime.now())
-                .gzippedHtml(gzippedHtml)
+                .html(html)
                 .logId(LogContext.getLogId())
                 .test(jobBoardConfig.test())
                 .build();

@@ -19,7 +19,6 @@ import java.util.zip.GZIPOutputStream;
 public class SnapshotFetcher {
 
     public byte[] fetchSnapshot(JobBoardConfig jobBoardConfig) {
-        log.info("[ID: {}] - Fetching new snapshot", LogContext.getLogId());
         byte[] html = RestClient.builder()
                 .build()
                 .get()
@@ -34,17 +33,6 @@ public class SnapshotFetcher {
             throw new EmptyHtmlException("Job board retrieve empty page. Job board config: " + jobBoardConfig);
         }
 
-        return encodeToGzip(html);
-    }
-
-    private byte[] encodeToGzip(byte[] html) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try (GZIPOutputStream gzip = new GZIPOutputStream(baos)) {
-            gzip.write(html);
-        } catch (IOException e) {
-            log.error("[ID: {}] - Exception during page encoding", LogContext.getLogId(), e);
-            throw new RuntimeException(e);
-        }
-        return baos.toByteArray();
+        return html;
     }
 }
