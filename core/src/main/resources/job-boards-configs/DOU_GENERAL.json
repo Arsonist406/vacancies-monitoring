@@ -1,10 +1,10 @@
 {
-  "url": "https://jobs.dou.ua/vacancies/?category=Java",
+  "url": "https://jobs.dou.ua/vacancies/",
   "fetchDelayInSeconds": 30,
   "headers": {
     "Accept-Language": "uk;q=0.6",
     "Accept": "text/html",
     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
   },
-  "test": false
+  "test": true
 }

@@ -22,3 +22,6 @@ app:
 
     parser:
         url: ${PARSER_URL}
+
+    job-board-cookie:
+        djinni: ${JOB_BOARD_COOKIE_DJINNI}

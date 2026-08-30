@@ -8,4 +8,8 @@ public class CoreException extends RuntimeException {
     public CoreException(Throwable cause) {
         super(cause);
     }
+
+    public CoreException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

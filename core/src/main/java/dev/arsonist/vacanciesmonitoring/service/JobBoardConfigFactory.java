@@ -1,6 +1,7 @@
 package dev.arsonist.vacanciesmonitoring.service;
 
 import dev.arsonist.vacanciesmonitoring.dto.JobBoardConfig;
+import dev.arsonist.vacanciesmonitoring.exception.CoreException;
 import dev.arsonist.vacanciesmonitoring.model.JobBoard;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
@@ -9,6 +10,7 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -17,6 +19,7 @@ public class JobBoardConfigFactory {
     private record JobBoardConfigProjection(
             String url,
             long fetchDelayInSeconds,
+            Map<String, String> headers,
             boolean test
     ) {}
 
@@ -25,10 +28,16 @@ public class JobBoardConfigFactory {
     public JobBoardConfig create(JobBoard jobBoard) {
         String path = "job-boards-configs/" + jobBoard.name() + ".json";
         try (InputStream is = new ClassPathResource(path).getInputStream()) {
-            JobBoardConfigProjection json = objectMapper.readValue(is, JobBoardConfigProjection.class);
-            return new JobBoardConfig(jobBoard, json.url(), json.fetchDelayInSeconds(), json.test());
+            var projection = objectMapper.readValue(is, JobBoardConfigProjection.class);
+            return JobBoardConfig.builder()
+                    .jobBoard(jobBoard)
+                    .url(projection.url())
+                    .fetchDelayInSeconds(projection.fetchDelayInSeconds())
+                    .headers(projection.headers())
+                    .test(projection.test())
+                    .build();
         } catch (IOException e) {
-            throw new RuntimeException("Error during reading config of " + jobBoard, e);
+            throw new CoreException("Error during reading config of " + jobBoard, e);
         }
     }
 }
