@@ -13,7 +13,7 @@
 
 ## Project overview
 Vacancies-monitoring is a multi-module Spring Boot core + Fast API parser system that fetches html with 
-vacancies from external job-boards, parses and sends it over Telegram API to single user.
+vacancies from external job-boards, parses them and sends parsed vacancies over Telegram API to single user.
 
 ## Stack
 - Language: Java 21, Python 3.12

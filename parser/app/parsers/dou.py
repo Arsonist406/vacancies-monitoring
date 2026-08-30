@@ -1,8 +1,14 @@
+import re
+
 from app.models import Vacancy
 from app.parsers.errors import ParsingError
 from bs4 import BeautifulSoup
 
-VERSION = "dou-v1"
+VERSION = "dou-v2"
+
+
+def _clean_text(text: str) -> str:
+    return re.sub(r"\s+", " ", text).strip()
 
 
 def parse(html: str, job_board: str) -> list[Vacancy]:
@@ -20,15 +26,15 @@ def parse(html: str, job_board: str) -> list[Vacancy]:
             raise ParsingError(f"Vacancy card missing required field(s): {card}")
 
         location_el = card.select_one(".cities")
-        location = location_el.get_text(strip=True) if location_el else ""
+        location = _clean_text(location_el.get_text()) if location_el else ""
 
         vacancies.append(
             Vacancy(
                 jobBoard=job_board,
-                title=title_el.get_text(strip=True),
+                title=_clean_text(title_el.get_text()),
                 location=location,
-                publishTime=date_el.get_text(strip=True),
-                companyName=company_el.get_text(strip=True),
+                publishTime=_clean_text(date_el.get_text()),
+                companyName=_clean_text(company_el.get_text()),
                 url=title_el["href"],
             )
         )
