@@ -6,7 +6,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public record SnapshotProperties(
         long lifetimeInDays,
         long testLifetimeInDays,
-        long fetchDelayInSeconds,
         long sleepUpToBeforeFetchInMilliseconds
 ) {
 }

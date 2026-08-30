@@ -1,4 +1,5 @@
 {
   "url": "https://jobs.dou.ua/vacancies/?category=Marketing",
+  "fetchDelayInSeconds": 30,
   "test": true
 }

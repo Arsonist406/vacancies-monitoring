@@ -1,6 +1,5 @@
 package dev.arsonist.vacanciesmonitoring.task;
 
-import dev.arsonist.vacanciesmonitoring.config.SnapshotProperties;
 import dev.arsonist.vacanciesmonitoring.model.JobBoard;
 import dev.arsonist.vacanciesmonitoring.service.JobBoardConfigFactory;
 import dev.arsonist.vacanciesmonitoring.service.LogContext;
@@ -21,7 +20,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class SnapshotsFetchTaskFactory {
 
-    private final SnapshotProperties snapshotProperties;
     private final TaskScheduler taskScheduler;
     private final JobBoardConfigFactory jobBoardConfigFactory;
     private final MainFlowExecutor mainFlowExecutor;
@@ -29,14 +27,15 @@ public class SnapshotsFetchTaskFactory {
     @PostConstruct
     public void init() {
         Arrays.stream(JobBoard.values()).forEach(jobBoard -> {
-            var periodicDelay = Duration.ofSeconds(snapshotProperties.fetchDelayInSeconds());
+            var jobBoardConfig = jobBoardConfigFactory.create(jobBoard);
+
+            var periodicDelay = Duration.ofSeconds(jobBoardConfig.fetchDelayInSeconds());
             var trigger = new PeriodicTrigger(periodicDelay);
 
             var initialDelay = Duration.ofSeconds(20);
             trigger.setInitialDelay(initialDelay);
             trigger.setFixedRate(false);
 
-            var jobBoardConfig = jobBoardConfigFactory.create(jobBoard);
             taskScheduler.schedule(() -> {
                 String logId = jobBoardConfig.jobBoard() + ":" + UUID.randomUUID();
                 Runnable runnable = () -> mainFlowExecutor.execute(jobBoardConfig);

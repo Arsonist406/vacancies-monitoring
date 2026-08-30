@@ -120,6 +120,7 @@ public class MainFlowExecutor {
                 return null;
             }
 
+            log.info("[ID: {}] - New vacancies!", LogContext.getLogId());
             var savedVacancies = filteredVacancies.stream()
                     .map(this::mapToVacancy)
                     .map(vacancyRepository::save)
