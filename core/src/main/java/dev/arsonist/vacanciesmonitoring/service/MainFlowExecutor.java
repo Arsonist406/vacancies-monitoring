@@ -154,7 +154,7 @@ public class MainFlowExecutor {
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     log.error("[ID: {}] - Exception during sleeping", LogContext.getLogId(), e);
-                    throw new CoreException(e);
+                    throw new RuntimeException(e);
                 }
             }
         }
