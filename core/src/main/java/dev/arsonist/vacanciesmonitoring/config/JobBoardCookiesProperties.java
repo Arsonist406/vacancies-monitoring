@@ -9,7 +9,7 @@ public record JobBoardCookiesProperties(
 ) {
     public String get(JobBoard jobBoard) {
         return switch (jobBoard) {
-            case DJINNI_GENERAL, DJINNI_JAVA -> djinni;
+            case DJINNI-> djinni;
             default -> null;
         };
     }

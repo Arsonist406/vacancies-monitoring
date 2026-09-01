@@ -15,6 +15,8 @@ import java.util.HashMap;
 @RequiredArgsConstructor
 public class TelegramNotifier {
 
+    private static final int TELEGRAM_MAX_MESSAGE_LENGTH = 4096;
+
     private final RestClient telegramClient;
     private final TelegramProperties telegramProperties;
 
@@ -30,7 +32,7 @@ public class TelegramNotifier {
     private void execute(String message) {
         var body = new HashMap<>();
         body.put("chat_id", telegramProperties.chatId());
-        body.put("text", message);
+        body.put("text", truncate(message));
         body.put("parse_mode", "HTML");
 
         telegramClient.post()
@@ -39,5 +41,12 @@ public class TelegramNotifier {
                 .body(body)
                 .retrieve()
                 .toBodilessEntity();
+    }
+
+    private String truncate(String message) {
+        if (message.length() <= TELEGRAM_MAX_MESSAGE_LENGTH) {
+            return message;
+        }
+        return message.substring(0, TELEGRAM_MAX_MESSAGE_LENGTH - 3) + "...";
     }
 }

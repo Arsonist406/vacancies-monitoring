@@ -33,7 +33,7 @@ public class SnapshotsFetchTaskFactory {
                 trigger.setFixedRate(false);
 
                 taskScheduler.schedule(() -> {
-                    String logId = jobBoardConfig.filter() + ":" + UUID.randomUUID();
+                    String logId = jobBoard.name() + ":" + jobBoardConfig.filter() + ":" + UUID.randomUUID();
                     Runnable runnable = () -> mainFlowExecutor.execute(jobBoardConfig);
                     LogContext.withLogId(logId, runnable);
                 }, trigger);
