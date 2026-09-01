@@ -19,6 +19,7 @@ public class NewVacancyMessageBuilder implements MessageBuilder<List<Vacancy>> {
     private String formatVacancy(Vacancy vacancy) {
         return """
                 <b>🔥</b> %s <b>🔥</b>
+                <b>Filter:</b> %s
                 <b>Board:</b> %s
                 <b>Company:</b> %s
                 <b>Location:</b> %s
@@ -27,6 +28,7 @@ public class NewVacancyMessageBuilder implements MessageBuilder<List<Vacancy>> {
                 """
                 .formatted(
                         escape(vacancy.getTitle()),
+                        escape(vacancy.getFilter()),
                         escape(vacancy.getJobBoard().name()),
                         escape(vacancy.getCompanyName()),
                         escape(vacancy.getLocation()),

@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface VacancyRepository extends MongoRepository<Vacancy, String> {
 
-    @Query("{ 'companyName': ?0, 'jobBoard': ?1, 'location': ?2, 'title': ?3 }")
-    List<Vacancy> existsByKeys(String companyName, JobBoard jobBoard, String location, String title);
+    @Query("{ 'companyName': ?0, 'jobBoard': ?1, 'filter': ?2, 'location': ?3, 'title': ?4 }")
+    List<Vacancy> existsByKeys(String companyName, JobBoard jobBoard, String filter, String location, String title);
 }

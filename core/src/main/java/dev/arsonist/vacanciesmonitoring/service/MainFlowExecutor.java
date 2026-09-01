@@ -71,6 +71,7 @@ public class MainFlowExecutor {
         var snapshot = Snapshot.builder()
                 .id(snapshotId)
                 .jobBoard(jobBoardConfig.jobBoard())
+                .filter(jobBoardConfig.filter())
                 .fetchTime(LocalDateTime.now())
                 .html(html)
                 .logId(LogContext.getLogId())
@@ -110,7 +111,8 @@ public class MainFlowExecutor {
             throw new ParserException("Parser return 0 vacancies");
         } else {
             var filteredVacancies = Arrays.stream(vacancies)
-                    .filter(v -> vacancyRepository.existsByKeys(v.companyName(), jobBoardConfig.jobBoard(), v.location(), v.title())
+                    .filter(v -> vacancyRepository.existsByKeys(
+                            v.companyName(), jobBoardConfig.jobBoard(), jobBoardConfig.filter(), v.location(), v.title())
                             .isEmpty())
                     .toList();
             if (filteredVacancies.isEmpty()) {
@@ -120,17 +122,19 @@ public class MainFlowExecutor {
 
             log.info("[ID: {}] - New vacancies!", LogContext.getLogId());
             var savedVacancies = filteredVacancies.stream()
-                    .map(this::mapToVacancy)
+                    .map(v -> mapToVacancy(v, jobBoardConfig.filter()))
                     .map(vacancyRepository::save)
                     .toList();
             return newVacancyMessageBuilder.build(savedVacancies);
         }
     }
 
-    private Vacancy mapToVacancy(VacancyDto vacancyDto) {
+    private Vacancy mapToVacancy(VacancyDto vacancyDto,
+                                 String filter) {
         return Vacancy.builder()
                 .companyName(vacancyDto.companyName())
                 .jobBoard(vacancyDto.jobBoard())
+                .filter(filter)
                 .location(vacancyDto.location())
                 .title(vacancyDto.title())
                 .publishTime(vacancyDto.publishTime())

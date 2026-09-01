@@ -1,5 +1,16 @@
 {
-  "url": "https://djinni.co/jobs/?search_type=basic-search",
+  "urls": [
+    {
+      "filter": "JAVA-1-2-y",
+      "url": "https://djinni.co/jobs/?all_keywords=Java&search_type=basic-search&exp_level=1y&exp_level=2y",
+      "test": false
+    },
+    {
+      "filter": "GENERAL",
+      "url": "https://djinni.co/jobs/?search_type=basic-search",
+      "test": true
+    }
+  ],
   "fetchDelayInSeconds": 300,
   "sleepUpToBeforeFetchInMilliseconds": 60000,
   "headers": {
@@ -10,6 +21,5 @@
     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
     "Host": "djinni.co",
     "Cache-Control": "max-age=0"
-  },
-  "test": true
+  }
 }

@@ -8,6 +8,7 @@ import java.util.Map;
 @Builder
 public record JobBoardConfig(
         JobBoard jobBoard,
+        String filter,
         String url,
         long fetchDelayInSeconds,
         long sleepUpToBeforeFetchInMilliseconds,

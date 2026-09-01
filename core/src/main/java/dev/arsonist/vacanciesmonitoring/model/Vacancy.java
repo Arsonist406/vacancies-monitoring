@@ -13,13 +13,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document("vacancies")
 @CompoundIndex(
         name = "job_board_title_company_name_idx",
-        def = "{'companyName': 1, 'jobBoard': 1, 'location': 1, 'title': 1}", unique = true)
+        def = "{'companyName': 1, 'jobBoard': 1, 'filter': 1, 'location': 1, 'title': 1}", unique = true)
 public class Vacancy {
 
     @Id
     private String id;
 
     private JobBoard jobBoard;
+    private String filter;
     private String companyName;
     private String location;
     private String title;

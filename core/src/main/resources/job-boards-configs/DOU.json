@@ -1,0 +1,26 @@
+{
+  "urls": [
+    {
+      "filter": "JAVA-0-1-y",
+      "url": "https://jobs.dou.ua/vacancies/?category=Java&exp=0-1",
+      "test": false
+    },
+    {
+      "filter": "JAVA-1-3-y",
+      "url": "https://jobs.dou.ua/vacancies/?category=Java&exp=1-3",
+      "test": false
+    },
+    {
+      "filter": "GENERAL",
+      "url": "https://jobs.dou.ua/vacancies/",
+      "test": true
+    }
+  ],
+  "fetchDelayInSeconds": 30,
+  "sleepUpToBeforeFetchInMilliseconds": 20000,
+  "headers": {
+    "Accept-Language": "uk;q=0.6",
+    "Accept": "text/html",
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+  }
+}

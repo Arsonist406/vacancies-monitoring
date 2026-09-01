@@ -17,6 +17,7 @@ public class Snapshot {
     @Id
     private String id;
     private JobBoard jobBoard;
+    private String filter;
     private LocalDateTime fetchTime;
     private byte[] html;
     private String parserVersion;
