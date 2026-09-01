@@ -37,7 +37,7 @@ public class SnapshotsFetchTaskFactory {
                     Runnable runnable = () -> mainFlowExecutor.execute(jobBoardConfig);
                     LogContext.withLogId(logId, runnable);
                 }, trigger);
-                log.info("Schedule periodic task for {}", jobBoard);
+                log.info("Schedule periodic task for {} {}", jobBoard, jobBoardConfig.filter());
             });
         });
     }
