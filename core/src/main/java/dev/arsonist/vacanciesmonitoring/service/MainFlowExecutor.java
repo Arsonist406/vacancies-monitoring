@@ -152,7 +152,7 @@ public class MainFlowExecutor {
             } catch (TelegramException exception) {
                 // probably, lost internet connection or telegram servers are dead
                 try {
-                    Thread.sleep(20000);
+                    Thread.sleep(5000);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     log.error("[ID: {}] - Exception during sleeping", LogContext.getLogId(), e);
