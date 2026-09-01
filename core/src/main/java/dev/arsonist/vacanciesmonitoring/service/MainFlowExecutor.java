@@ -64,7 +64,7 @@ public class MainFlowExecutor {
     }
 
     public String executeInternal(JobBoardConfig jobBoardConfig) {
-        sleep();
+        sleep(jobBoardConfig);
 
         log.info("[ID: {}] - Fetching new snapshot", LogContext.getLogId());
         byte[] html = snapshotFetcher.fetchSnapshot(jobBoardConfig);
@@ -86,8 +86,8 @@ public class MainFlowExecutor {
         return buildMessage(parseResponse, jobBoardConfig);
     }
 
-    private void sleep() {
-        long sleepTimeInMillis = random.nextLong(0, snapshotProperties.sleepUpToBeforeFetchInMilliseconds());
+    private void sleep(JobBoardConfig jobBoardConfig) {
+        long sleepTimeInMillis = random.nextLong(0, jobBoardConfig.sleepUpToBeforeFetchInMilliseconds());
         try {
             log.info("[ID: {}] - Sleeping for {} seconds for randomization of request time",
                     LogContext.getLogId(), Duration.ofMillis(sleepTimeInMillis).toSeconds());

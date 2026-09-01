@@ -1,6 +1,7 @@
 {
   "url": "https://djinni.co/jobs/?search_type=basic-search",
   "fetchDelayInSeconds": 300,
+  "sleepUpToBeforeFetchInMilliseconds": 60000,
   "headers": {
     "Connection": "keep-alive",
     "Accept-Encoding": "gzip, deflate, br",

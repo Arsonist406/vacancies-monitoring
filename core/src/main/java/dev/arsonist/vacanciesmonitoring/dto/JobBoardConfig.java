@@ -10,6 +10,7 @@ public record JobBoardConfig(
         JobBoard jobBoard,
         String url,
         long fetchDelayInSeconds,
+        long sleepUpToBeforeFetchInMilliseconds,
         Map<String, String> headers,
         // testing parser correctness. java can have 0 vacancies, but general probably not
         // therefore: general have 0 vacancies -> parser is dead

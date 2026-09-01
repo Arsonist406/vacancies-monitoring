@@ -1,6 +1,7 @@
 {
   "url": "https://jobs.dou.ua/vacancies/",
   "fetchDelayInSeconds": 30,
+  "sleepUpToBeforeFetchInMilliseconds": 20000,
   "headers": {
     "Accept-Language": "uk;q=0.6",
     "Accept": "text/html",

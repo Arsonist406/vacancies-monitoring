@@ -5,7 +5,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "app.snapshots")
 public record SnapshotProperties(
         long lifetimeInDays,
-        long testLifetimeInDays,
-        long sleepUpToBeforeFetchInMilliseconds
+        long testLifetimeInDays
 ) {
 }

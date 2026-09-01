@@ -19,6 +19,7 @@ public class JobBoardConfigFactory {
     private record JobBoardConfigProjection(
             String url,
             long fetchDelayInSeconds,
+            long sleepUpToBeforeFetchInMilliseconds,
             Map<String, String> headers,
             boolean test
     ) {}
@@ -33,6 +34,7 @@ public class JobBoardConfigFactory {
                     .jobBoard(jobBoard)
                     .url(projection.url())
                     .fetchDelayInSeconds(projection.fetchDelayInSeconds())
+                    .sleepUpToBeforeFetchInMilliseconds(projection.sleepUpToBeforeFetchInMilliseconds())
                     .headers(projection.headers())
                     .test(projection.test())
                     .build();

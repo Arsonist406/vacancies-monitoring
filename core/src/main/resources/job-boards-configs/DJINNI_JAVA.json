@@ -1,6 +1,7 @@
 {
   "url": "https://djinni.co/jobs/?all_keywords=Java&search_type=basic-search&exp_level=1y&exp_level=2y",
   "fetchDelayInSeconds": 300,
+  "sleepUpToBeforeFetchInMilliseconds": 60000,
   "headers": {
     "Connection": "keep-alive",
     "Accept-Encoding": "gzip, deflate, br",
