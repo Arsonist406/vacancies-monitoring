@@ -1,6 +1,5 @@
 package dev.arsonist.vacanciesmonitoring.service;
 
-import dev.arsonist.vacanciesmonitoring.config.SnapshotProperties;
 import dev.arsonist.vacanciesmonitoring.dto.JobBoardConfig;
 import dev.arsonist.vacanciesmonitoring.dto.VacancyDto;
 import dev.arsonist.vacanciesmonitoring.exception.CoreException;
@@ -33,7 +32,6 @@ public class MainFlowExecutor {
 
     private final Random random;
     private final SnapshotFetcher snapshotFetcher;
-    private final SnapshotProperties snapshotProperties;
     private final SnapshotRepository snapshotRepository;
     private final ObjectMapper objectMapper;
     private final TelegramNotifier telegramNotifier;

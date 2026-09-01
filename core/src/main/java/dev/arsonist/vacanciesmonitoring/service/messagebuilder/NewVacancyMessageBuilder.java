@@ -11,25 +11,23 @@ public class NewVacancyMessageBuilder implements MessageBuilder<List<Vacancy>> {
 
     @Override
     public String build(List<Vacancy> vacancies) {
-        String body = vacancies.stream()
+        return vacancies.stream()
                 .map(this::formatVacancy)
                 .collect(Collectors.joining("\n\n"));
-
-        return "<b>🫪🔥New Vacancy🔥🫪</b>\n\n" + body;
     }
 
     private String formatVacancy(Vacancy vacancy) {
         return """
+                <b>🔥</b> %s <b>🔥</b>
                 <b>Board:</b> %s
-                <b>Title:</b> %s
                 <b>Company:</b> %s
                 <b>Location:</b> %s
                 <b>Published:</b> %s
                 <a href="%s">Link</a>
                 """
                 .formatted(
-                        escape(vacancy.getJobBoard().name()),
                         escape(vacancy.getTitle()),
+                        escape(vacancy.getJobBoard().name()),
                         escape(vacancy.getCompanyName()),
                         escape(vacancy.getLocation()),
                         escape(vacancy.getPublishTime()),
